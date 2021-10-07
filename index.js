@@ -3,7 +3,6 @@ const fs = require("fs");
 let prompt = require('prompt-sync')();
 require('dotenv').config()
 
-bot.start((ctx) => ctx.reply("مرحبا بك في بوت قناة عواطف مهتريه ارسل صوره او فديو وسيتم مراجعتها من المشرف قبل الارسال"));
 if(!process.env.START){
   let tokin = prompt("bot tokin is =>")
   let adminID = prompt("bot adminID is =>")
@@ -19,6 +18,7 @@ require('dotenv').config()
 const bot = new Telegraf(process.env.BOT_TOKIN);
 const adminID = process.env.BOT_ADMIN;
 const channel = process.env.BOT_CHANNEL;
+bot.start((ctx) => ctx.reply("مرحبا بك في بوت تحويل الرسائل لقناة البوت"));
 
 bot.command("id", (ctx) => {
   ctx.reply(ctx.chat.id);
