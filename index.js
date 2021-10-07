@@ -1,9 +1,24 @@
 const { Telegraf, Markup } = require("telegraf");
+const fs = require("fs");
+let prompt = require('prompt-sync')();
+require('dotenv').config()
 
-const bot = new Telegraf(process.env.TOKN);
-const adminID = "271778802";
-const channel = "-1001380125976";
 bot.start((ctx) => ctx.reply("مرحبا بك في بوت قناة عواطف مهتريه ارسل صوره او فديو وسيتم مراجعتها من المشرف قبل الارسال"));
+if(!process.env.START){
+  let tokin = prompt("bot tokin is =>")
+  let adminID = prompt("bot adminID is =>")
+  let channel = prompt("bot channelID is =>")
+  fs.writeFileSync( ".env" ,
+`BOT_TOKIN=${tokin}
+BOT_ADMIN=${adminID}
+BOT_CHANNEL=${channel}
+START=true`)
+require('dotenv').config()
+
+}
+const bot = new Telegraf(process.env.BOT_TOKIN);
+const adminID = process.env.BOT_ADMIN;
+const channel = process.env.BOT_CHANNEL;
 
 bot.command("id", (ctx) => {
   ctx.reply(ctx.chat.id);
