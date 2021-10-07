@@ -1,6 +1,6 @@
 const { Telegraf, Markup } = require("telegraf");
 
-const bot = new Telegraf("1909699059:AAESdlLMsABR8FBDBo95TY7C1jEweORxLoM");
+const bot = new Telegraf(process.env.TOKN);
 const adminID = "271778802";
 const channel = "-1001380125976";
 bot.start((ctx) => ctx.reply("مرحبا بك في بوت قناة عواطف مهتريه ارسل صوره او فديو وسيتم مراجعتها من المشرف قبل الارسال"));
