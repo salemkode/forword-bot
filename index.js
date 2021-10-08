@@ -4,9 +4,9 @@ let prompt = require('prompt-sync')();
 require('dotenv').config()
 
 if(!process.env.START){
-  let tokin = prompt("bot tokin is =>")
-  let adminID = prompt("bot adminID is =>")
-  let channel = prompt("bot channelID is =>")
+  let tokin = prompt("bot tokin is => ")
+  let adminID = prompt("bot adminID is => ")
+  let channel = prompt("bot channelID is => ")
   fs.writeFileSync( ".env" ,
 `BOT_TOKIN=${tokin}
 BOT_ADMIN=${adminID}
