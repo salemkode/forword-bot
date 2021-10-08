@@ -24,30 +24,42 @@ bot.command("id", (ctx) => {
   ctx.reply(ctx.chat.id);
 });
 
+function fullName(ctx) {
+  let from = ctx.from;
+  return (from.first_name || "") + "_" + (from.last_name || "") 
+}
+
+function caption(ctx){
+  let name = "#مشاركة_" + fullName(ctx);
+  let { caption } = ctx.message;
+  return name + "\n" + caption;
+}
+
 bot.on("photo", (ctx) => {
   let photo = ctx.message.photo;
-  sendAdmin(photo[photo.length - 1].file_id);
+  sendAdmin(photo[photo.length - 1].file_id, {caption :  caption(ctx)});
 });
 
 bot.on("video", (ctx) => {
-  sendAdminVideo(ctx.message.video.file_id);
+  sendAdminVideo(ctx.message.video.file_id,  {caption : caption(ctx)});
 });
 
-bot.launch((e) => console.log("I am start"));
+bot.launch().then((e) => console.log("I am start"));
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
-function sendAdmin(photo) {
+function sendAdmin(photo , op) {
   bot.telegram.sendPhoto(
     adminID,
     photo,
-    Markup.inlineKeyboard([
+    { ...Markup.inlineKeyboard([
       Markup.button.callback("yes", "send-i"),
       Markup.button.callback("no", "remove"),
-    ])
-  );
+    ]) , ...op }
+  )
+  
 }
 
 function sendAdminVideo(video) {
@@ -66,14 +78,14 @@ bot.action("remove", (e) => {
   let messageId = e.update.callback_query.message.message_id;
   bot.telegram.deleteMessage(chat, messageId);
 });
-
-bot.action("send-i", (e) => {
-  let photo = e.update.callback_query.message.photo;
-  bot.telegram.sendPhoto(channel, photo[photo.length - 1].file_id);
+const action_caption = ctx=> ctx.update.callback_query.message.caption;
+bot.action("send-i", (ctx) => {
+  let photo = ctx.update.callback_query.message.photo;
+  bot.telegram.sendPhoto(channel, photo[photo.length - 1].file_id , {caption : action_caption(ctx)});
 });
 
-bot.action("send-v", (e) => {
-  let video = e.update.callback_query.message.video.file_id;
-  bot.telegram.sendVideo(channel, video);
+bot.action("send-v", (ctx) => {
+  let video = ctx.update.callback_query.message.video.file_id;
+  bot.telegram.sendVideo(channel, video , {caption : action_caption(ctx)});
 });
 
