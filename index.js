@@ -26,13 +26,14 @@ bot.command("id", (ctx) => {
 
 function fullName(ctx) {
   let from = ctx.from;
-  return (from.first_name || "") + "_" + (from.last_name || "") 
+  let result = (from.first_name || "") + " " + (from.last_name || "") ;
+  return result.split(" ").join("_")
 }
 
 function caption(ctx){
   let name = "#مشاركة_" + fullName(ctx);
   let { caption } = ctx.message;
-  return name + "\n" + caption;
+  return name + "\n" + ( caption || "");
 }
 
 bot.on("photo", (ctx) => {
@@ -78,7 +79,9 @@ bot.action("remove", (e) => {
   let messageId = e.update.callback_query.message.message_id;
   bot.telegram.deleteMessage(chat, messageId);
 });
-const action_caption = ctx=> ctx.update.callback_query.message.caption;
+
+const action_caption = ctx=> ctx.update.callback_query.message.caption || "";
+
 bot.action("send-i", (ctx) => {
   let photo = ctx.update.callback_query.message.photo;
   bot.telegram.sendPhoto(channel, photo[photo.length - 1].file_id , {caption : action_caption(ctx)});
